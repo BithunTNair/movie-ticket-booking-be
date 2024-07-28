@@ -1,6 +1,5 @@
 const USERS = require('../models/userModel');
 const bcrypt = require('bcrypt');
-const { response } = require('express');
 const jwt = require('jsonwebtoken');
 
 
@@ -9,7 +8,7 @@ const signup = (req, res) => {
     try {
         const { firstName, lastName, email, password, mobileNumber, } = req.body;
         bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS), function (err, hash) {
-            console.log(typeof process.env.SALT_ROUNDS);
+           
             if (err) {
                 console.log('password is not hashed');
                 console.log(hash);
@@ -39,7 +38,7 @@ const signup = (req, res) => {
 const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const userData = USERS.findOne({ email: email })
+        const userData = await USERS.findOne({ email: email })
        
         if (userData) {
             
@@ -51,6 +50,7 @@ const signin = async (req, res) => {
                         expiresIn: '1d'
                     }
                     const token = jwt.sign({ ...userData }, process.env.SECRETE_KEY, options);
+                    res.cookie('token',token)
                     res.status(200).json({ user:userData, token })
                 } else {
                     console.log(err);

@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
-const port = 3000;
+const port = 5000;
 const authRoutes=require('./routes/authRoutes')
+const adminRoutes=require('./routes/adminRoutes')
 const DB= require('./config/db');
 const dotenv=require('dotenv');
 const cookieParser = require('cookie-parser');
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth',authRoutes);
+app.use('/admin',adminRoutes);
 
 
 
